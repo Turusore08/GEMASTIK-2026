@@ -1,0 +1,29 @@
+# PANDUAN IMPLEMENTASI BASELINE 1: LFCC + LCNN (OFFICIAL GITHUB CLONE)
+**Arsitektur:** Linear Frequency Cepstral Coefficients (LFCC) + Light CNN (LCNN)
+**Peran:** Sebagai batas bawah performa (*lower-bound baseline*) menggunakan arsitektur orisinal dari literatur (Wu et al., 2018).
+
+---
+
+## INSTRUKSI UNTUK AI AGENT (PROMPT JUPYTER NOTEBOOK GENERATOR)
+
+*(Salin teks di bawah ini dan berikan kepada AI Agent seperti GitHub Copilot, ChatGPT, atau Claude untuk membuatkan file `.ipynb`)*
+
+**Prompt AI Agent:**
+> "Kamu adalah seorang Senior AI Engineer yang fokus pada riset Audio Anti-Spoofing (ASVspoof). Saya sedang membangun Baseline 1 untuk eksperimen saya menggunakan arsitektur LFCC + LCNN.
+> 
+> **Konteks:** Saya sudah melakukan *clone* pada repositori GitHub resmi Light CNN (berdasarkan paper Wu et al., 2018). Repositori tersebut berada di direktori lokal saya (D:\Lomba\Gemastik 2026\Data Mining\panduan\github). 
+> 
+> **Tugas:** Buatkan saya skrip lengkap dalam bentuk **Jupyter Notebook (.ipynb)** yang siap dijalankan (reproducible). Skrip ini harus memuat tahapan dari ekstraksi fitur hingga evaluasi metrik akhir.
+> 
+> **Syarat dan Spesifikasi Kode:**
+> 1. **Reproduksibilitas:** Awali *notebook* dengan pengaturan `random seed` untuk PyTorch, NumPy, dan Python agar hasilnya deterministik.
+> 2. **Ekstraksi Fitur (Front-End):** Buat fungsi ekstraksi LFCC menggunakan pustaka `torchaudio` atau `spafe`. Input berupa file `.wav` (16kHz), dan output berupa tensor 2D. Tambahkan fungsi *padding/truncating* agar dimensi waktu (time frames) seragam untuk setiap *batch*.
+> 3. **Integrasi Model LCNN (Back-End):** >    - Berikan kode untuk mengimpor arsitektur LCNN dari folder hasil *clone* (misalnya `from light_cnn import LightCNN`). 
+>    - Karena LCNN asli sering kali dikembangkan untuk gambar wajah (input 3 *channels* RGB atau 1 *channel* grayscale ukuran tertentu), berikan kode *wrapper* atau modifikasi lapisan `Conv2d` pertamanya agar sesuai dengan dimensi tensor LFCC (1 *channel*).
+>    - Ubah atau pastikan *classifier head* (lapisan terakhir) menghasilkan 2 kelas (*Bona fide* vs *Spoof*).
+> 4. **Metrik Evaluasi (Matrix):** Ini adalah bagian paling krusial. Pada fase validasi/evaluasi, hitung dan tampilkan metrik berikut:
+>    - **Equal Error Rate (EER):** Buatkan fungsi untuk menghitung EER menggunakan modul `scipy.optimize.brentq` dan `sklearn.metrics.roc_curve`.
+>    - **tandem Detection Cost Function (t-DCF):** Berikan fungsi atau *wrapper* untuk menghitung nilai minimum t-DCF (min t-DCF) sesuai protokol standar ASVspoof.
+> 5. **Training & Validation Loop:** Buat *loop* pelatihan menggunakan `Adam optimizer` dan `CrossEntropyLoss`. Di setiap akhir *epoch*, cetak (print) *Loss*, *Accuracy*, *EER*, dan *min t-DCF* dalam format yang rapi (seperti matriks log).
+> 
+> Tolong berikan penjelasan Markdown di dalam Jupyter Notebook untuk setiap sel (cell) kodenya agar mudah saya laporkan ke dalam jurnal/makalah riset."
