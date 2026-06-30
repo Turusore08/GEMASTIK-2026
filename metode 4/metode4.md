@@ -34,8 +34,8 @@
 >      - Terapkan **Stratified Quota Sampling** menggunakan pandas dari file `.tsv` lokal:
 >        1. Buat fungsi `get_sampled_dataframe(tsv_path, max_bonafide, samples_per_attack)` untuk membaca berkas `.tsv` (`ASVspoof5.dev.track_1.tsv`) menggunakan `pandas` dengan `sep=' '` dan kolom-kolom: `SPEAKER_ID`, `FLAC_FILE_NAME`, `SPEAKER_GENDER`, `CODEC`, `CODEC_Q`, `CODEC_SEED`, `ATTACK_TAG`, `ATTACK_LABEL`, `KEY`, `TMP`.
 >        2. Filter kelas `bonafide` sebanyak `max_bonafide` (misal 2500) dan kelas `spoof` dengan *groupby* `ATTACK_LABEL` lalu ambil `samples_per_attack` per jenis serangan agar seimbang.
->        3. Buat kelas `ASVspoof5Dataset(Dataset)` yang menerima DataFrame hasil sampling dan `audio_dir` (path folder `.flac` lokal seperti `flac_D/` untuk dev).
->        4. Di dalam `__getitem__`, ambil file audio `.flac`, lakukan *padding/truncating* agar panjangnya tepat 64600 samples (sesuai standar input AASIST), ubah kolom `KEY` menjadi label biner (0 untuk `bonafide`, 1 untuk `spoof`), dan kembalikan `(waveform_tensor, label_tensor)`.
+>        3. Buat kelas `ASVspoof5Dataset(Dataset)` yang menerima DataFrame hasil sampling dan `audio_dir` (path root folder audio). Di dalam `__init__`, gunakan `os.walk(audio_dir)` untuk memindai seluruh subfolder secara rekursif (misalnya `flac_D_aa/flac_D/`, `flac_D_ab/flac_D/`, dll.) dan bangun map/dictionary nama file ke path absolutnya.
+>        4. Di dalam `__getitem__`, ambil file audio `.flac` menggunakan path absolut dari map pemetaan tersebut, lakukan *padding/truncating* agar panjangnya tepat 64600 samples (sesuai standar input AASIST), ubah kolom `KEY` menjadi label biner (0 untuk `bonafide`, 1 untuk `spoof`), dan kembalikan `(waveform_tensor, label_tensor)`.
 >        5. Inisialisasi `DataLoader` untuk evaluasi lintas-dataset ini untuk menghitung EER dan min t-DCF.
 > 
 > 5. **Metrik Evaluasi (Matrix):**
