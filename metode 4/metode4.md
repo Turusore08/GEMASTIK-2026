@@ -28,7 +28,7 @@
 >    - Buatkan sebuah **Adapter Layer (Conv2D layer sederhana)** yang menerima tensor fusi CQT-LFCC kita dan memproyeksikannya (memetakan *channels* dan dimensinya) agar ukurannya persis sesuai dengan input yang diharapkan oleh lapisan *Graph Attention* pertama dari AASIST.
 > 
 > 4. **Strategi Dataset & Cross-Evaluation (ASVspoof 5 Lokal):**
->    - **Training & Validation:** Simulasikan pemuatan dataset ASVspoof 2019 Logical Access (LA) dari `/kaggle/input/...`.
+>    - **Training & Validation (ASVspoof 5 Lokal):** Gunakan skema data dari dataset lokal ASVspoof 5 dengan file protokol `ASVspoof5.train.tsv` (untuk training) dan `ASVspoof5.dev.track_1.tsv` (untuk validation/dev) menggunakan teknik **Stratified Quota Sampling** dari `data.md` untuk menghemat memori.
 >    - **Testing (Stress-Test - ASVspoof 5 Lokal):**
 >      - Terapkan pemuatan dataset **ASVspoof 5 secara lokal** sesuai panduan **data.md**.
 >      - Terapkan **Stratified Quota Sampling** menggunakan pandas dari file `.tsv` lokal:

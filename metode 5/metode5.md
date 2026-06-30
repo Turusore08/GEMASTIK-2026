@@ -33,7 +33,7 @@
 >    - Setelah melewati *Temporal Attention*, lakukan *flattening* dan lewati *Linear classifier* untuk *output* 2 kelas (*Bona fide* vs *Spoof*).
 > 
 > 5. **Strategi Dataset & Cross-Evaluation (ASVspoof 5 Lokal):**
->    - **Training & Validation:** Pemuatan simulasi ASVspoof 2019 Logical Access (LA).
+>    - **Training & Validation (ASVspoof 5 Lokal):** Pemuatan dataset lokal ASVspoof 5 dengan file protokol `ASVspoof5.train.tsv` (untuk training) dan `ASVspoof5.dev.track_1.tsv` (untuk validation/dev) menggunakan teknik **Stratified Quota Sampling** dari `data.md` untuk menghemat memori.
 >    - **Testing (Stress-Test - ASVspoof 5 Lokal):**
 >      - Terapkan pemuatan dataset **ASVspoof 5 secara lokal** sesuai panduan **data.md**.
 >      - Terapkan **Stratified Quota Sampling** menggunakan pandas dari file `.tsv` lokal:

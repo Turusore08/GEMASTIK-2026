@@ -22,7 +22,7 @@
 > 3. **Pemrosesan Data (Front-End Bawaan):** >    - AASIST murni menggunakan *Sinc-filter* bawaan untuk mengekstrak fitur dari audio mentah (*raw waveform*).
 >    - Buatkan *Data Loader* yang memuat audio `.wav` (16kHz) dan melakukan *padding/truncating* menjadi tepat **64.600 samples** (sesuai standar input AASIST).
 > 4. **Strategi Dataset & Cross-Evaluation (ASVspoof 5 Lokal):**
->    - **Training & Validation:** Simulasikan pemuatan dari subset ASVspoof 2019 Logical Access (LA) menggunakan *path* `/kaggle/input/...`.
+>    - **Training & Validation (ASVspoof 5 Lokal):** Gunakan skema data dari dataset lokal ASVspoof 5 dengan file protokol `ASVspoof5.train.tsv` (untuk training) dan `ASVspoof5.dev.track_1.tsv` (untuk validation/dev) menggunakan teknik **Stratified Quota Sampling** dari `data.md` untuk menghemat memori.
 >    - **Testing (Stress-Test - ASVspoof 5 Lokal):**
 >      - Terapkan pemuatan dataset **ASVspoof 5 secara lokal** sesuai panduan **data.md**.
 >      - Terapkan **Stratified Quota Sampling** menggunakan pandas dari file `.tsv` lokal:

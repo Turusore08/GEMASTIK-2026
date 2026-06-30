@@ -19,7 +19,7 @@
 > 1. **Reproduksibilitas & Integrasi Lokal:** Awali dengan import `sys` dan gunakan `sys.path.append(r"D:\Lomba\Gemastik 2026\Data Mining\panduan\github")` agar Python dapat mengimpor kelas arsitektur `RawNet2` dari *folder* tersebut secara langsung. Jangan buat arsitektur RawNet2 dari awal, cukup *import* dan panggil *class*-nya. Set `random seed` untuk PyTorch dan NumPy.
 > 2. **Pemrosesan Data (End-to-End):** Karena RawNet2 menerima *raw waveform*, tidak perlu ada ekstraksi MFCC/LFCC/CQT. Buat fungsi pemuatan data menggunakan `soundfile` atau `librosa` yang melakukan *padding* atau *truncating* pada audio `.wav` (16kHz) menjadi panjang tetap (misalnya 64.000 *samples* atau sekitar 4 detik) agar bisa masuk ke dalam *batch* tensor 1D.
 > 3. **Strategi Dataset:**
->    - **Training & Validation:** Gunakan skema data dari subset ASVspoof 2019 Logical Access (LA).
+>    - **Training & Validation (ASVspoof 5 Lokal):** Gunakan skema data dari dataset lokal ASVspoof 5 dengan file protokol `ASVspoof5.train.tsv` (untuk training) dan `ASVspoof5.dev.track_1.tsv` (untuk validation/dev) menggunakan teknik **Stratified Quota Sampling** dari `data.md` untuk menghemat memori.
 >    - **Testing / Cross-Dataset Evaluation (ASVspoof 5 Lokal):**
 >      - Terapkan pemuatan dataset **ASVspoof 5 secara lokal** sesuai panduan **data.md**.
 >      - Definisikan base direktori (contoh: `BASE_DIR = r"D:\Lomba\Gemastik 2026\Data Mining\Dataset_ASVspoof5_Sampled"`).
