@@ -20,7 +20,15 @@
 > 2. **Pemrosesan Data (End-to-End):** Karena RawNet2 menerima *raw waveform*, tidak perlu ada ekstraksi MFCC/LFCC/CQT. Buat fungsi pemuatan data menggunakan `soundfile` atau `librosa` yang melakukan *padding* atau *truncating* pada audio `.wav` (16kHz) menjadi panjang tetap (misalnya 64.000 *samples* atau sekitar 4 detik) agar bisa masuk ke dalam *batch* tensor 1D.
 > 3. **Strategi Dataset:**
 >    - **Training & Validation:** Gunakan skema data dari subset ASVspoof 2019 Logical Access (LA).
->    - **Testing / Cross-Dataset Evaluation:** Buatkan satu *cell* khusus untuk memuat dataset **ASVspoof 5** menggunakan `datasets.load_dataset("jungjee/asvspoof5", streaming=True)`. Buatkan fungsi *Stratified Sampling* yang mengambil maksimal 5.000 sampel pengujian dengan proporsi *Bona fide* dan *Spoof* yang seimbang, serta memastikan setiap *Attack ID* pada *metadata* terwakili secara merata.
+>    - **Testing / Cross-Dataset Evaluation (ASVspoof 5 Lokal):**
+>      - Terapkan pemuatan dataset **ASVspoof 5 secara lokal** sesuai panduan **data.md**.
+>      - Definisikan base direktori (contoh: `BASE_DIR = r"D:\Lomba\Gemastik 2026\Data Mining\Dataset_ASVspoof5_Sampled"`).
+>      - Terapkan **Stratified Quota Sampling** menggunakan pandas dari file `.tsv` lokal:
+>        1. Buat fungsi `get_sampled_dataframe(tsv_path, max_bonafide, samples_per_attack)` untuk membaca berkas `.tsv` (`ASVspoof5.dev.track_1.tsv`) menggunakan `pandas` dengan `sep=' '` dan kolom-kolom: `SPEAKER_ID`, `FLAC_FILE_NAME`, `SPEAKER_GENDER`, `CODEC`, `CODEC_Q`, `CODEC_SEED`, `ATTACK_TAG`, `ATTACK_LABEL`, `KEY`, `TMP`.
+>        2. Filter kelas `bonafide` sebanyak `max_bonafide` (misal 2500) dan kelas `spoof` dengan *groupby* `ATTACK_LABEL` lalu ambil `samples_per_attack` per jenis serangan agar seimbang.
+>        3. Buat kelas `ASVspoof5Dataset(Dataset)` yang menerima DataFrame hasil sampling dan `audio_dir` (path folder `.flac` lokal seperti `flac_D/` untuk dev).
+>        4. Di dalam `__getitem__`, ambil file audio `.flac`, lakukan *padding/truncating* agar panjangnya tepat 64000 samples, ubah kolom `KEY` menjadi label biner (0 untuk `bonafide`, 1 untuk `spoof`), dan kembalikan `(waveform_tensor, label_tensor)`.
+>        5. Inisialisasi `DataLoader` untuk evaluasi lintas-dataset ini untuk menghitung EER dan min t-DCF.
 > 4. **Metrik Evaluasi (Matrix):** >    - Kalkulasi dan tampilkan **Equal Error Rate (EER)** menggunakan kurva ROC.
 >    - Kalkulasi **minimum tandem Detection Cost Function (min t-DCF)** sesuai protokol ASVspoof.
 > 5. **Training Loop:** Bangun *loop* pelatihan menggunakan `Adam` optimizer (atau optimizer yang direkomendasikan di paper RawNet2) dan *loss function* yang sesuai (biasanya *CrossEntropyLoss*). Cetak (*print*) *Loss*, EER, dan min t-DCF pada akhir setiap *epoch*.

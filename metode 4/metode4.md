@@ -27,9 +27,16 @@
 >    - Modifikasi AASIST: Hapus/nonaktifkan lapisan `Sinc-Conv` bawaannya.
 >    - Buatkan sebuah **Adapter Layer (Conv2D layer sederhana)** yang menerima tensor fusi CQT-LFCC kita dan memproyeksikannya (memetakan *channels* dan dimensinya) agar ukurannya persis sesuai dengan input yang diharapkan oleh lapisan *Graph Attention* pertama dari AASIST.
 > 
-> 4. **Strategi Dataset & Cross-Evaluation:**
+> 4. **Strategi Dataset & Cross-Evaluation (ASVspoof 5 Lokal):**
 >    - **Training & Validation:** Simulasikan pemuatan dataset ASVspoof 2019 Logical Access (LA) dari `/kaggle/input/...`.
->    - **Testing (Stress-Test):** Impor dataset **ASVspoof 5** secara *streaming* via Hugging Face (`datasets.load_dataset("jungjee/asvspoof5", streaming=True)`). Terapkan **Stratified Random Sampling** untuk mengambil maksimal 5.000 sampel pengujian, dengan rasio kelas *Bona fide/Spoof* yang seimbang dan mencakup seluruh *Attack ID* secara merata.
+>    - **Testing (Stress-Test - ASVspoof 5 Lokal):**
+>      - Terapkan pemuatan dataset **ASVspoof 5 secara lokal** sesuai panduan **data.md**.
+>      - Terapkan **Stratified Quota Sampling** menggunakan pandas dari file `.tsv` lokal:
+>        1. Buat fungsi `get_sampled_dataframe(tsv_path, max_bonafide, samples_per_attack)` untuk membaca berkas `.tsv` (`ASVspoof5.dev.track_1.tsv`) menggunakan `pandas` dengan `sep=' '` dan kolom-kolom: `SPEAKER_ID`, `FLAC_FILE_NAME`, `SPEAKER_GENDER`, `CODEC`, `CODEC_Q`, `CODEC_SEED`, `ATTACK_TAG`, `ATTACK_LABEL`, `KEY`, `TMP`.
+>        2. Filter kelas `bonafide` sebanyak `max_bonafide` (misal 2500) dan kelas `spoof` dengan *groupby* `ATTACK_LABEL` lalu ambil `samples_per_attack` per jenis serangan agar seimbang.
+>        3. Buat kelas `ASVspoof5Dataset(Dataset)` yang menerima DataFrame hasil sampling dan `audio_dir` (path folder `.flac` lokal seperti `flac_D/` untuk dev).
+>        4. Di dalam `__getitem__`, ambil file audio `.flac`, lakukan *padding/truncating* agar panjangnya tepat 64600 samples (sesuai standar input AASIST), ubah kolom `KEY` menjadi label biner (0 untuk `bonafide`, 1 untuk `spoof`), dan kembalikan `(waveform_tensor, label_tensor)`.
+>        5. Inisialisasi `DataLoader` untuk evaluasi lintas-dataset ini untuk menghitung EER dan min t-DCF.
 > 
 > 5. **Metrik Evaluasi (Matrix):**
 >    - Hitung **Equal Error Rate (EER)**.

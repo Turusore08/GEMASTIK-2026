@@ -25,5 +25,13 @@
 >    - **Equal Error Rate (EER):** Buatkan fungsi untuk menghitung EER menggunakan modul `scipy.optimize.brentq` dan `sklearn.metrics.roc_curve`.
 >    - **tandem Detection Cost Function (t-DCF):** Berikan fungsi atau *wrapper* untuk menghitung nilai minimum t-DCF (min t-DCF) sesuai protokol standar ASVspoof.
 > 5. **Training & Validation Loop:** Buat *loop* pelatihan menggunakan `Adam optimizer` dan `CrossEntropyLoss`. Di setiap akhir *epoch*, cetak (print) *Loss*, *Accuracy*, *EER*, dan *min t-DCF* dalam format yang rapi (seperti matriks log).
+> 6. **Pengujian Lintas-Dataset (Cross-Dataset Evaluation ASVspoof 5 Lokal):**
+>    - Tambahkan sel khusus untuk mengevaluasi model pada dataset **ASVspoof 5** secara **lokal** sesuai dengan panduan **data.md**.
+>    - Terapkan **Stratified Quota Sampling** menggunakan pandas dari file `.tsv` lokal:
+>      1. Buat fungsi `get_sampled_dataframe(tsv_path, max_bonafide, samples_per_attack)` untuk membaca berkas `.tsv` lokal (`ASVspoof5.dev.track_1.tsv`) dengan parameter `sep=' '` dan kolom-kolom: `SPEAKER_ID`, `FLAC_FILE_NAME`, `SPEAKER_GENDER`, `CODEC`, `CODEC_Q`, `CODEC_SEED`, `ATTACK_TAG`, `ATTACK_LABEL`, `KEY`, `TMP`.
+>      2. Filter kelas `bonafide` sebanyak `max_bonafide` (misal 2500) dan kelas `spoof` dengan *groupby* `ATTACK_LABEL` lalu ambil `samples_per_attack` (misal 250) per grup jenis serangan agar seimbang.
+>      3. Buat kelas `ASVspoof5Dataset(Dataset)` yang menerima DataFrame hasil sampling dan `audio_dir` (path folder `.flac` lokal seperti `flac_D/` untuk dev).
+>      4. Di dalam `__getitem__`, ambil file audio `.flac`, lakukan *padding/truncating* agar panjangnya tepat 64000 samples, ubah kolom `KEY` menjadi label biner (0 untuk `bonafide`, 1 untuk `spoof`), dan kembalikan `(waveform_tensor, label_tensor)`.
+>      5. Gunakan `DataLoader` untuk memuat data pengujian ini dan jalankan evaluasi untuk menghitung EER dan min t-DCF.
 > 
 > Tolong berikan penjelasan Markdown di dalam Jupyter Notebook untuk setiap sel (cell) kodenya agar mudah saya laporkan ke dalam jurnal/makalah riset."
