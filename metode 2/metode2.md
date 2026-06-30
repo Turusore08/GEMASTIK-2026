@@ -22,7 +22,7 @@
 >    - **Training & Validation (ASVspoof 5 Lokal):** Gunakan skema data dari dataset lokal ASVspoof 5 dengan file protokol `ASVspoof5.train.tsv` (untuk training) dan `ASVspoof5.dev.track_1.tsv` (untuk validation/dev) menggunakan teknik **Stratified Quota Sampling** dari `data.md` untuk menghemat memori.
 >    - **Testing / Cross-Dataset Evaluation (ASVspoof 5 Lokal):**
 >      - Terapkan pemuatan dataset **ASVspoof 5 secara lokal** sesuai panduan **data.md**.
->      - Definisikan base direktori (contoh: `BASE_DIR = r"D:\Lomba\Gemastik 2026\Data Mining\Dataset_ASVspoof5_Sampled"`).
+>      - Definisikan base direktori (contoh: `BASE_DIR = "/kaggle/input/datasets/raditya0/asvspoof5"` dengan fallback ke folder lokal `D:/Lomba/Gemastik 2026/Data Mining/Dataset_ASVspoof5_Sampled`).
 >      - Terapkan **Stratified Quota Sampling** menggunakan pandas dari file `.tsv` lokal:
 >        1. Buat fungsi `get_sampled_dataframe(tsv_path, max_bonafide, samples_per_attack)` untuk membaca berkas `.tsv` (`ASVspoof5.dev.track_1.tsv`) menggunakan `pandas` dengan `sep=' '` dan kolom-kolom: `SPEAKER_ID`, `FLAC_FILE_NAME`, `SPEAKER_GENDER`, `CODEC`, `CODEC_Q`, `CODEC_SEED`, `ATTACK_TAG`, `ATTACK_LABEL`, `KEY`, `TMP`.
 >        2. Filter kelas `bonafide` sebanyak `max_bonafide` (misal 2500) dan kelas `spoof` dengan *groupby* `ATTACK_LABEL` lalu ambil `samples_per_attack` per jenis serangan agar seimbang.
